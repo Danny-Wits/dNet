@@ -1,31 +1,57 @@
 from dRender.Tile import Tile
 import numpy as np
+import time
 
 
 def distance(t1: Tile, t2: Tile):
     return np.round(np.hypot(t1.x - t2.x, t1.y - t2.y)/Tile.SIZE, 2)
 
 
-def findNeighbors(t1: Tile, Map: list[Tile]):
+def findNeighbors(t1: Tile, Map: list[Tile], diag=True):
 
     if t1 is None:
         return {}
+    t1.select("NS")
     neighbors = set()
     row = t1.getRow()
     col = t1.getCol()
-    limit = int(np.sqrt(len(Map)))-1
+    limit = Tile.GRID_SIZE-1
 
     rowUp = row - 1 if row > 0 else 0
     rowDown = row + 1 if row < limit else limit
     colLeft = col - 1 if col > 0 else 0
     colRight = col + 1 if col < limit else limit
-
-    neighborsId = {row * 10 + colLeft, row * 10 + colRight,
-                   rowUp * 10 + col, rowDown * 10 + col,
-                   rowUp * 10 + colLeft, rowUp * 10 + colRight,
-                   rowDown * 10 + colLeft, rowDown * 10 + colRight
-                   }
+    limit = limit + 1
+    neighborsId = {row * limit + colLeft, row * limit + colRight,
+                   rowUp * limit + col, rowDown * limit + col,
+                   rowUp * limit + colLeft, rowUp * limit + colRight,
+                   rowDown * limit + colLeft, rowDown * limit + colRight
+                   } if diag else {row * limit + colLeft, row * limit + colRight,
+                                   rowUp * limit + col, rowDown * limit + col
+                                   }
     for id in neighborsId:
         if id != t1.id and Map[id].isObstacle == False:
             neighbors.add(Map[id])
+    for n in neighbors:
+        n.select("N")
     return neighbors
+
+
+def findPath(t1: Tile, t2: Tile, Map: list[Tile], visited=None):
+    if visited == None:
+        visited = set()
+    if t1.id == t2.id:
+        return [t1]
+
+    visited.add(t1)
+
+    neighbors = findNeighbors(t1, Map, diag=False)
+    sortedNeighbors = sorted(
+        neighbors, key=lambda n: distance(n, t2))
+    for neighbor in sortedNeighbors:
+        if neighbor not in visited:
+            path = findPath(neighbor, t2, Map, visited)
+            if path != None:
+                return [t1] + path
+
+    return None

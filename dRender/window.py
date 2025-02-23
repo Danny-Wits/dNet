@@ -7,7 +7,7 @@ class Surface (Canvas):
         self.height = height
         master.title(title)
         # master.resizable(False, False)
-        super().__init__(master=master, width=width, height=height, background="#E0F2F7")
+        super().__init__(master=master, width=width, height=height, background="white")
         self.pack(expand=True, fill='both')
         self.focus_set()
 
@@ -18,6 +18,9 @@ class Surface (Canvas):
     def setKeyPress(self, func):
         self.bind("<Key>", func)
         return self
+
+    def setRightClick(self, func):
+        self.bind("<Button-3>", func)
 
     def run(self):
         self.mainloop()
