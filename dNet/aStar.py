@@ -43,14 +43,14 @@ def findPath(t1: Tile, t2: Tile, Map: list[Tile], visited=None):
     if t1.id == t2.id:
         return [t1]
     visited.add(t1)
-    
+
     #!GETTING THE NEIGHBORS
     neighbors = findNeighbors(t1, Map, diag=False)
-    
+
     #! SORTING BASED ON DISTANCE
     sortedNeighbors = sorted(
         neighbors, key=lambda n: distance(n, t2))
-    
+
     #! SEARCH THE CLOSEST NEIGHBOR TO THE GOAL
     for neighbor in sortedNeighbors:
         if neighbor not in visited:
