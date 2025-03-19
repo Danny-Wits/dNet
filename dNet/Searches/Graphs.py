@@ -1,6 +1,4 @@
 import dearpygui.dearpygui as dpg
-import time
-
 
 class Node:
     equalityIndexes = [0, 1]
@@ -64,6 +62,7 @@ class Graph:
                     continue
                 queue.append(child)
                 parents[child] = node
+                print(f"Visited : {child}")
         path = [end]
         while parents[end] != None:
             path.append(parents[end])

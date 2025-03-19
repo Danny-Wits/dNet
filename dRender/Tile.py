@@ -18,6 +18,12 @@ class Tile:
         self.isEnd = False
         Tile.SIZE = size
         self.color = "gray" if isObstacle else color
+        self.g_cost = 0
+        self.h_cost = 0
+        self.parent = None
+
+    def get_f_cost(self):
+        return self.g_cost+self.h_cost
 
     def select(self, mode="D"):
         self.color = self.COLORS[mode]
@@ -64,7 +70,8 @@ class Tile:
         self.surface.create_rectangle(
             self.x, self.y, self.x + self.SIZE, self.y + self.SIZE, fill=self.color if not self.isObstacle else "black")
         self.surface.create_text(
-            self.x + self.SIZE / 2, self.y + self.SIZE / 2, text=str(self.id), fill="black"
+            self.x + self.SIZE / 2, self.y + self.SIZE / 2, font=("Arial", 10), text=str(round(self.g_cost, 0))+" | "+str(round(self.h_cost, 0))+"\n  "+str(round(self.get_f_cost(), 1)), fill="black"
+
         )
         self.surface.create_rectangle(
             self.x, self.y, self.x + self.SIZE, self.y + self.SIZE, outline="white", width=2)

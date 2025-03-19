@@ -19,7 +19,7 @@ class MapRunner:
         self.g.setKeyPress(self.onKeyPress)
         self.g.setRightClick(self.onRightClick)
         self.mode = "path"
-        self.writeTitle("Using Best First Search aka Greedy BFS", 14)
+        self.writeTitle("Using A Star", 14)
 
     def start(self):
         self.setMap()
@@ -91,6 +91,8 @@ class MapRunner:
         self.t2 = None
         for tile in self.Tiles:
             tile.unselect()
+            tile.g_cost = 0
+            tile.h_cost = 0
             tile.finish()
         self.g.update_idletasks()
 
@@ -147,7 +149,7 @@ class MapRunner:
         elif (self.t2 == None):
             self.t2 = self.getTile(event.x, event.y)
             self.t2.end()
-            path = findPath(self.t1, self.t2, self.Tiles)
+            path = useAStar(self.t1, self.t2, self.Tiles)
             self.writeText(
                 f"Selected:{self.t1.id} =>{self.t2.id} Path: {[t.id for t in path]}")
             for tile in path:

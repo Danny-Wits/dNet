@@ -58,3 +58,48 @@ def findPath(t1: Tile, t2: Tile, Map: list[Tile], visited=None):
             if path != None:
                 return [t1] + path
     return None
+
+
+def aStar(t1: Tile, t2: Tile, Map: list[Tile]):
+    #!Evaluating open
+    t1.g_cost = 0
+    t1.h_cost = distance(t1, t2)
+    open = {t1}  # adding t1 to open
+    closed = set()  # set of evaluated nodes
+
+    while True:
+
+        #!Selecting Best Node
+        current = min(open, key=lambda t: t.get_f_cost())
+
+        #!Setting current to be processed
+        open.remove(current)
+        closed.add(current)
+
+        #!Adding neighbors to open
+        if current.id == t2.id:
+            return current
+
+        neighbor = findNeighbors(current, Map, diag=False)
+
+        for n in neighbor:
+            if n in closed:
+                continue
+            new_g_cost = current.g_cost+distance(current, n)
+            if n not in open or new_g_cost < n.g_cost:
+                n.g_cost = new_g_cost
+                n.h_cost = distance(n, t2)
+                n.parent = current
+                if n not in open:
+                    open.add(n)
+                time.sleep(0.01)
+
+
+def useAStar(t1: Tile, t2: Tile, Map: list[Tile]):
+    target = aStar(t1, t2, Map)
+    path = []
+    while target.parent.id != t1.id:
+        path.append(target)
+        target = target.parent
+    path.append(target)
+    return path
