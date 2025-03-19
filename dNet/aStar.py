@@ -61,8 +61,7 @@ def findPath(t1: Tile, t2: Tile, Map: list[Tile], visited=None):
 
 
 def aStar(t1: Tile, t2: Tile, Map: list[Tile]):
-    #!Evaluating open
-    t1.g_cost = 0
+    #!Evaluating source
     t1.h_cost = distance(t1, t2)
     open = {t1}  # adding t1 to open
     closed = set()  # set of evaluated nodes
@@ -70,7 +69,7 @@ def aStar(t1: Tile, t2: Tile, Map: list[Tile]):
     while True:
 
         #!Selecting Best Node
-        current = min(open, key=lambda t: t.get_f_cost())
+        current = min(open, key=lambda t: t.get_f_cost()+t.h_cost)
 
         #!Setting current to be processed
         open.remove(current)
@@ -87,12 +86,15 @@ def aStar(t1: Tile, t2: Tile, Map: list[Tile]):
                 continue
             new_g_cost = current.g_cost+distance(current, n)
             if n not in open or new_g_cost < n.g_cost:
+
+                #!Setting F cost
                 n.g_cost = new_g_cost
                 n.h_cost = distance(n, t2)
+
+                # Setting Best parent
                 n.parent = current
                 if n not in open:
                     open.add(n)
-                time.sleep(0.01)
 
 
 def useAStar(t1: Tile, t2: Tile, Map: list[Tile]):
