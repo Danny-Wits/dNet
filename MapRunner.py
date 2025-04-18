@@ -89,11 +89,8 @@ class MapRunner:
         self.t = None
         self.t1 = None
         self.t2 = None
-        for tile in self.Tiles:
-            tile.unselect()
-            tile.g_cost = 0
-            tile.h_cost = 0
-            tile.finish()
+        self.Tiles = []
+        self.setMap()
         self.g.update_idletasks()
 
     # Interactions

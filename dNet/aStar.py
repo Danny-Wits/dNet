@@ -69,7 +69,7 @@ def aStar(t1: Tile, t2: Tile, Map: list[Tile]):
     while True:
 
         #!Selecting Best Node
-        current = min(open, key=lambda t: t.get_f_cost()+t.h_cost)
+        current = min(open, key=lambda t: t.get_f_cost())
 
         #!Setting current to be processed
         open.remove(current)
@@ -79,7 +79,7 @@ def aStar(t1: Tile, t2: Tile, Map: list[Tile]):
         if current.id == t2.id:
             return current
 
-        neighbor = findNeighbors(current, Map, diag=False)
+        neighbor = findNeighbors(current, Map, diag=True)
 
         for n in neighbor:
             if n in closed:
